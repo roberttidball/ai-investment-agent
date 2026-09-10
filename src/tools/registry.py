@@ -70,7 +70,9 @@ class Toolkit:
 
         # search_foreign_sources powers the PRICE DRAWDOWN PROTOCOL's
         # native-language "share price decline reason" pass (news prompt v5.4).
-        return [get_news, get_macroeconomic_news, search_foreign_sources]
+        from src.tools.fxmacrodata import get_fxmacrodata_tools
+
+        return [get_news, get_macroeconomic_news, search_foreign_sources, *get_fxmacrodata_tools()]
 
     def get_foreign_language_tools(self):
         """Tools for Foreign Language Analyst (supplemental data from native sources)."""

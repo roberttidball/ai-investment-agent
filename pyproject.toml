@@ -7,6 +7,7 @@ readme = "README.md"
 packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
+fxmacrodata-public-client = { url = "https://github.com/fxmacrodata/fxmacrodata-public-client/releases/download/v0.1.0/fxmacrodata_public_client-0.1.0-py3-none-any.whl" }
 # Python version compatibility
 python = ">=3.12,<3.13"
 

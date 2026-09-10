@@ -38,7 +38,7 @@ logger = structlog.get_logger(__name__)
 _CACHE_DIR: Path | None = None
 _DEFAULT_TTL_HOURS = 12
 _THIN_MIN_CHARS = 500
-_FINGERPRINT_SCHEMA = "MACRO_QUERY_V1\nMACRO_OUTPUT_V1"
+_FINGERPRINT_SCHEMA = "MACRO_QUERY_V2_FXMACRODATA\nMACRO_OUTPUT_V1"
 
 
 @dataclass(frozen=True, slots=True)
@@ -239,7 +239,14 @@ async def _fetch_macro_raw(trade_date: str, region: str) -> str:
     payload = {"trade_date": trade_date}
     if region:
         payload["region"] = region
-    return str(await get_macroeconomic_news.ainvoke(payload))
+    from src.tools.fxmacrodata import regional_macro_evidence
+
+    try:
+        news = str(await get_macroeconomic_news.ainvoke(payload))
+    except Exception:
+        news = "Macro news is unavailable."
+    official = await regional_macro_evidence(trade_date, region or "GLOBAL")
+    return f"{news}\n{official}"
 
 
 def _is_thin(raw: str | None) -> bool:

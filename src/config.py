@@ -1435,6 +1435,11 @@ class Settings(BaseSettings):
         validation_alias="GOOGLE_API_KEY",
         description="Google Gemini API key (required)",
     )
+    fxmacrodata_api_key: SecretStr = Field(
+        default=SecretStr(""),
+        validation_alias="FXMACRODATA_API_KEY",
+        description="Optional FXMacroData key; public USD data needs no key",
+    )
     tavily_api_key: SecretStr = Field(
         default=SecretStr(""),
         validation_alias="TAVILY_API_KEY",

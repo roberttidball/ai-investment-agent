@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add dated FXMacroData observations and scheduled releases to regional macro briefs, with optional analyst tools for the public API and MCP operations.
+
 ### Changed
 
 - **Cooled dependency refresh (August 2026)** — Move the LangChain, LangGraph,

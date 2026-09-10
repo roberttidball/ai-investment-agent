@@ -4,6 +4,7 @@ import inspect
 from unittest.mock import AsyncMock, patch
 
 import pytest
+from fxmacrodata_public import list_operations
 
 from src.tools.legal import search_legal_tax_disclosures
 from src.tools.market import (
@@ -52,12 +53,27 @@ def test_toolkit_group_accessors_return_expected_tools():
     market_tool_names = {tool.name for tool in toolkit.get_market_tools()}
     assert {"get_yfinance_data", "get_technical_indicators"} <= market_tool_names
 
-    news_tool_names = {tool.name for tool in toolkit.get_news_tools()}
-    assert news_tool_names == {
-        "get_news",
-        "get_macroeconomic_news",
-        "search_foreign_sources",
-    }
+    news_tools = toolkit.get_news_tools()
+    news_tool_names = {tool.name for tool in news_tools}
+    operations = list_operations()
+    macro_names = {f"fxmacrodata_{operation.name}" for operation in operations}
+    assert len(macro_names) == 72
+    assert len(news_tools) == len(news_tool_names)
+    assert (
+        news_tool_names
+        == {
+            "get_news",
+            "get_macroeconomic_news",
+            "search_foreign_sources",
+        }
+        | macro_names
+    )
+    registered_tools = {tool.name: tool for tool in news_tools}
+    for operation in operations:
+        assert (
+            registered_tools[f"fxmacrodata_{operation.name}"].args_schema
+            == operation.input_schema
+        )
 
     foreign_tool_names = {tool.name for tool in toolkit.get_foreign_language_tools()}
     assert foreign_tool_names == {
